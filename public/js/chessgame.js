@@ -21,7 +21,7 @@ const renderBoard = () => {
 
             if (square) {
                 const pieceElement = document.createElement("div");
-                pieceElement.classList.add("piece", square.color === 'W' ? "white" : "black");
+                pieceElement.classList.add("piece", square.color === 'w' ? "white" : "black");
 
                 pieceElement.innerText = getPieceUnicode(square);
                 pieceElement.draggable = playerRole === square.color;
@@ -59,12 +59,22 @@ const renderBoard = () => {
             boardElement.appendChild(squareElement);
         });
     });
+
+    if (playerRole === 'b') {
+        boardElement.classList.add("flipped");
+    }
+    else {
+        boardElement.classList.remove("flipped");
+    }
 };
+
+
 
 const handleMove = (source, target) => {
     const move = {
-        from: `${StaticRange.fromCharCode(97 + source.col)}${8 - source.row}`,
-        to: `${StaticRange.fromCharCode(97 + target.col)}${8 - target.row}`,
+        from: `${String.fromCharCode(97 + source.col)}${8 - source.row}`,
+        to: `${String.fromCharCode(97 + target.col)}${8 - target.row}`,
+
         promotion: 'q', //need to add more promotions
     };
 
@@ -79,6 +89,7 @@ const getPieceUnicode = (piece) => {
         b: '♝', // black bishop U+265D
         q: '♛', // black queen U+265B
         k: '♚', // black king U+265A
+
         P: '♙', // white pawn U+2659
         R: '♖', // white rook U+2656
         N: '♘', // white knight U+2658
@@ -90,8 +101,8 @@ const getPieceUnicode = (piece) => {
     return unicodePieces[piece.type] || "";
 };
 
-socket.on("playerRole", function () {
-    playerRole = playerRole;
+socket.on("playerRole", function (role) {
+    playerRole = role;
     renderBoard();
 });
 
@@ -100,14 +111,15 @@ socket.on("spectatorRole", function () {
     renderBoard();
 });
 
-socket.on("boardState", function () {
+socket.on("boardState", function (fen) {
     chess.load(fen);
     renderBoard();
 });
 
-socket.on("move", function () {
+socket.on("move", function (move) {
     chess.move(move);
     renderBoard();
 });
+
 
 renderBoard();
