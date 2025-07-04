@@ -83,23 +83,28 @@ const handleMove = (source, target) => {
 
 const getPieceUnicode = (piece) => {
     const unicodePieces = {
-        p: '♟', // black pawn U+265F
-        r: '♜', // black rook U+265C
-        n: '♞', // black knight U+265E
-        b: '♝', // black bishop U+265D
-        q: '♛', // black queen U+265B
-        k: '♚', // black king U+265A
+        p: '♟', // black pawn
+        r: '♜',
+        n: '♞',
+        b: '♝',
+        q: '♛',
+        k: '♚',
 
-        P: '♙', // white pawn U+2659
-        R: '♖', // white rook U+2656
-        N: '♘', // white knight U+2658
-        B: '♗', // white bishop U+2657
-        Q: '♕', // white queen U+2655
-        K: '♔'  // white king U+2654
+        P: '♙', // white pawn
+        R: '♖',
+        N: '♘',
+        B: '♗',
+        Q: '♕',
+        K: '♔'
     };
 
-    return unicodePieces[piece.type] || "";
+    // Combine color and type to distinguish black (lowercase) and white (uppercase)
+    const key = piece.color === 'w' ? piece.type.toUpperCase() : piece.type.toLowerCase();
+
+    return unicodePieces[key] || "";
 };
+
+
 
 socket.on("playerRole", function (role) {
     playerRole = role;
